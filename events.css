@@ -1,0 +1,187 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.event {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.image-container {
+    position: relative;
+    width: 55%; /* Updated width for image */
+    height: 200px; /* Adjust height as needed */
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 50px) 100%, 0 100%);
+}
+
+.event:nth-child(even) .image-container img {
+    clip-path: polygon(50px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.description {
+    width: 45%; /* Updated width for description */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.description h2 {
+    margin-top: 0;
+}
+
+.description p {
+    margin: 10px 0 0;
+}
+
+@media (max-width: 768px) {
+    .event {
+        flex-direction: column;
+    }
+
+    .event:nth-child(even) {
+        flex-direction: column;
+    }
+
+    .image-container,
+    .description {
+        width: 100%;
+    }
+
+    .image-container img {
+        clip-path: none;
+    }
+
+    .event:nth-child(even) .image-container img {
+        clip-path: none;
+    }
+}
+/* Footer */
+footer {
+    background-color: #8f0500;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 24px;
+}
+/* End of Footer */
+
+/*Header*/
+header {
+    padding: 20px;
+    background-color: #8f0500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 80px; 
+    margin-right: 10px;
+}
+
+.club-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover{
+    background-color: #fff;
+    color: #8f0500;
+    border-radius: 5px;
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+}
+
+.responsive-nav {
+    display: none;
+    background-color: #8f0500;
+    flex-direction: column;
+    z-index: 1000; 
+}
+
+.responsive-nav.active {
+    display: flex;
+}
+
+.responsive-nav a {
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        display: none; 
+    }
+
+    .menu-icon {
+        display: block; 
+    }
+}
+
+/*End of Header Styles*/
+
+em {
+    font-weight: bold;   /* Makes the text bold */
+    color: #8f0500;          /* Changes the text color to red */
+    font-style: italic; /* Ensures the text is italicized */
+}

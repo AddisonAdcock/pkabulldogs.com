@@ -1,0 +1,233 @@
+body {
+    font-family: 'Libre Baskerville', serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: #8f0500;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+p {
+    font-size: 1.2em;
+}
+
+/*Header*/
+header {
+    padding: 20px;
+    background-color: #8f0500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 80px; 
+    margin-right: 10px;
+}
+
+.club-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover{
+    background-color: #fff;
+    color: #8f0500;
+    border-radius: 5px;
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+}
+
+.responsive-nav {
+    display: none;
+    background-color: #8f0500;
+    flex-direction: column;
+    z-index: 1000; 
+}
+
+.responsive-nav.active {
+    display: flex;
+}
+
+.responsive-nav a {
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        display: none; 
+    }
+
+    .menu-icon {
+        display: block; 
+    }
+}
+
+/*End of Header Styles*/
+
+/*Top Image*/
+.middle-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-image: url('images/club_run.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 10rem;
+    padding-bottom: 18.1rem;
+    color: whitesmoke;
+    opacity: 0.9;
+}
+
+.middle-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .middle-container {
+        padding: 5rem;
+    }
+
+    .middle-container h1 {
+        font-size: 2em; 
+    }
+}
+
+/*End of Top Image*/
+
+/* Footer */
+footer {
+    background-color: #8f0500;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 24px;
+}
+/* End of Footer */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px;
+    padding: 20px;
+}
+
+/* About Section */
+.about-section {
+    background-color: #f8f8f8;
+    padding: 50px 0;
+}
+
+.about-section .container {
+    width: 80%;
+    margin: auto;
+    text-align: left;
+}
+
+.about-section h2 {
+    font-size: 2em;
+    color: #8f0500;
+}
+
+.about-section p {
+    font-size: 1.2em;
+    color: #333;
+    line-height: 1.6;
+}
+/* End of About Section */
+
+/* Achievements Section */
+.achievements-section {
+    background-color: #f8f8f8;
+    padding: 50px 0;
+}
+
+.achievements-section .container {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.achievements-section h2 {
+    font-size: 2em;
+    color: #8f0500;
+    text-align: center;
+}
+
+.achievements {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.achievement {
+    flex-basis: calc(33.33% - 20px);
+    margin: 1rem;
+    background-color: #8f0500;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.achievement h3 {
+    margin: 20px 0;
+}
+
+.achievement p {
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 992px) {
+    .achievement {
+        flex-basis: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .achievement {
+        flex-basis: calc(100% - 20px);
+    }
+}
+/* End of Achievements Section */
