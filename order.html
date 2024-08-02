@@ -79,7 +79,7 @@
 
             if (productId) {
                 try {
-                    const response = await fetch(`/api/products/${productId}`);
+                    const response = await fetch(`https://pkabulldogsbackend.onrender.com/api/products/${productId}`);
                     if (response.ok) {
                         const product = await response.json();
                         const productTitle = product.result.sync_product.name;
