@@ -234,7 +234,7 @@ footer a {
 
 .stats-section {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     padding: 20px;
     background-color: #fff;
@@ -269,5 +269,7 @@ footer a {
 
     .stat-card {
         margin: 10px 0;
+        flex: none; /* Add this line */
+        width: 100%; /* Add this line */
     }
 }
