@@ -6,6 +6,14 @@ body {
     color: #8f0500;
 }
 
+.events_body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
 h1 {
     font-size: 2.5em;
 }
@@ -272,4 +280,92 @@ footer a {
         flex: none; /* Add this line */
         width: 100%; /* Add this line */
     }
+}
+
+
+/* End of Stats Section */
+
+/* Events */
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.event {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.image-container {
+    position: relative;
+    width: 55%;
+    height: 200px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 50px) 100%, 0 100%);
+}
+
+.event:nth-child(even) .image-container img {
+    clip-path: polygon(50px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.description {
+    width: 45%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.description h2 {
+    margin-top: 0;
+}
+
+.description p {
+    margin: 10px 0 0;
+}
+
+@media (max-width: 768px) {
+    .event {
+        flex-direction: column;
+    }
+
+    .event:nth-child(even) {
+        flex-direction: column;
+    }
+
+    .image-container,
+    .description {
+        width: 100%;
+    }
+
+    .image-container img {
+        clip-path: none;
+    }
+
+    .event:nth-child(even) .image-container img {
+        clip-path: none;
+    }
+}
+
+em {
+    font-weight: bold;  
+    color: #8f0500;
+    font-style: italic;
 }
