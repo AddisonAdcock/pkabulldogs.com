@@ -3,16 +3,15 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-x: hidden;
 }
 
-
-
+/* Events Section */
 .container {
     width: 100%;
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+    box-sizing: border-box;
 }
 
 .event {
@@ -31,8 +30,8 @@ body {
 
 .image-container {
     position: relative;
-    width: 55%; /* Updated width for image */
-    height: 200px; /* Adjust height as needed */
+    width: 55%; 
+    height: 200px; 
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -50,7 +49,7 @@ body {
 }
 
 .description {
-    width: 45%; /* Updated width for description */
+    width: 45%;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -61,6 +60,12 @@ body {
 
 .description p {
     margin: 10px 0 0;
+}
+
+em {
+    font-weight: bold; 
+    color: #8f0500;
+    font-style: italic; 
 }
 
 @media (max-width: 768px) {
@@ -85,6 +90,8 @@ body {
         clip-path: none;
     }
 }
+/* End Events Section*/
+
 /* Footer */
 footer {
     background-color: #8f0500;
@@ -182,8 +189,4 @@ nav a:hover{
 
 /*End of Header Styles*/
 
-em {
-    font-weight: bold;   /* Makes the text bold */
-    color: #8f0500;          /* Changes the text color to red */
-    font-style: italic; /* Ensures the text is italicized */
-}
+
