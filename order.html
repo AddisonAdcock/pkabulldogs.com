@@ -179,6 +179,7 @@
             total_cost: document.getElementById("total-price").innerText
             }).then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
+            window.location.href = "afterorder.html?totalCost=" + document.getElementById("total-price").innerText;
             }, function(error) {
             console.error('FAILED...', error);
             });
