@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="events.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="home.html"><img src="images/logo.png" alt="Phi Kappa Alpha Logo"></a>
+            <h1 class="club-name">Phi Kappa Alpha</h1>
+        </div>
+        <nav>
+            <a href="home.html" class="active">Home</a>
+            <a href="https://pkabulldogs.printful.me/">Merch</a>
+            <a href="events.html">Events</a>
+            <a href="calendar.html">Calendar</a>
+        </nav>
+        <div class="menu-icon">&#9776;</div>
+    </header>
+    <nav class="responsive-nav">
+        <a href="home.html">Home</a>
+        <a href="https://pkabulldogs.printful.me/">Merch</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+    </nav>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            color:#222;
+        }
+
+        .calendar-nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-toggle-button {
+            position: absolute;
+            right: 0;
+        }
+
+        .calendar-button {
+            background-color: #8f0500;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .calendar-button:hover {
+            opacity: 0.8;
+        }
+
+        .calendar-view {
+            display: none;
+        }
+
+        .calendar-view.active {
+            display: block;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .calendar-day, .calendar-day-header {
+            padding: 20px;
+            background-color: #333;
+            text-align: center;
+            border: 1px solid #444;
+            box-sizing: border-box;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendar-day-header {
+            background-color: #8f0500;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .calendar-event-marker {
+            background-color: #8f0500;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .calendar-has-event {
+            background-color: #222;
+        }
+
+        .calendar-month-display {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .calendar-event-details {
+            display: none;
+            background-color: #222;
+            padding: 10px;
+            border: 1px solid #444;
+            margin-top: 10px;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .calendar-event-details.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-button {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+
+            .calendar-day, .calendar-day-header {
+                padding: 15px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-button {
+                font-size: 12px;
+                padding: 3px 6px;
+            }
+
+            .calendar-month-display {
+                font-size: 16px;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .calendar-day, .calendar-day-header {
+                padding: 10px;
+                font-size: 10px;
+            }
+        }
+    </style>
+    <div class="container">
+        <div class="calendar-header">
+            <div class="calendar-nav-buttons">
+                <button id="prevMonthBtn" class="calendar-button">Prev</button>
+                <div class="calendar-month-display" id="monthDisplay"></div>
+                <button id="nextMonthBtn" class="calendar-button">Next</button>
+            </div>
+        </div>
+        <div id="listView" class="calendar-view">
+            <!-- List of events will go here -->
+        </div>
+        <div id="calendarView" class="calendar-view">
+            <div class="calendar-container">
+                <div id="calendar" class="calendar-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevMonthBtn = document.getElementById('prevMonthBtn');
+            const nextMonthBtn = document.getElementById('nextMonthBtn');
+            const listView = document.getElementById('listView');
+            const calendarView = document.getElementById('calendarView');
+            const calendar = document.getElementById('calendar');
+            const monthDisplay = document.getElementById('monthDisplay');
+
+            let currentMonth = new Date().getMonth();
+            let currentYear = new Date().getFullYear();
+
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            function renderCalendar(events, month, year) {
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                calendar.innerHTML = '';
+
+                // Add day headers
+                daysOfWeek.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.textContent = day;
+                    dayHeader.classList.add('calendar-day-header');
+                    calendar.appendChild(dayHeader);
+                });
+
+                // Fill in empty days before the first day of the month
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.classList.add('calendar-day');
+                    calendar.appendChild(emptyDiv);
+                }
+
+                // Fill in the days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.textContent = day;
+                    dayDiv.classList.add('calendar-day');
+
+                    const event = events.find(event => {
+                        const eventDate = new Date(event.date);
+                        return eventDate.getDate() === day && eventDate.getMonth() === month && eventDate.getFullYear() === year;
+                    });
+
+                    if (event) {
+                        dayDiv.classList.add('calendar-has-event');
+                        const eventMarker = document.createElement('div');
+                        eventMarker.textContent = event.title;
+                        eventMarker.classList.add('calendar-event-marker');
+                        dayDiv.appendChild(eventMarker);
+
+                        const eventDetails = document.createElement('div');
+                        eventDetails.classList.add('calendar-event-details');
+                        eventDetails.textContent = `${event.title} - ${new Date(event.date).toLocaleDateString()}`;
+                    }
+
+                    calendar.appendChild(dayDiv);
+                }
+
+                monthDisplay.textContent = `${monthNames[month]} ${year}`;
+            }
+
+            function renderList(events) {
+                listView.innerHTML = events.map(event => `
+                    <div class="calendar-event">
+                        <h3>${event.title}</h3>
+                        <p>${new Date(event.date).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            }
+
+            fetch('events.json')
+                .then(response => response.json())
+                .then(data => {
+                    renderCalendar(data, currentMonth, currentYear);
+                    renderList(data);
+                });
+
+            prevMonthBtn.addEventListener('click', function() {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                fetch('events.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        renderCalendar(data, currentMonth, currentYear);
+                    });
+            });
+
+            nextMonthBtn.addEventListener('click', function() {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                fetch('events.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        renderCalendar(data, currentMonth, currentYear);
+                    });
+            });
+
+            calendarView.classList.add('active'); // Show calendar view by default
+        });
+    </script>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>    
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer>
+        <a href="https://www.facebook.com/pkabulldogs?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/pka.bulldogs/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@pkabulldogs" target="_blank"><i class="fab fa-youtube"></i></a>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
