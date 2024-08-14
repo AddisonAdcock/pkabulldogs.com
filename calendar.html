@@ -194,7 +194,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const prevMonthBtn = document.getElementById('prevMonthBtn');
@@ -203,19 +203,19 @@
             const calendarView = document.getElementById('calendarView');
             const calendar = document.getElementById('calendar');
             const monthDisplay = document.getElementById('monthDisplay');
-
-            let currentMonth = new Date().getMonth();
-            let currentYear = new Date().getFullYear();
-
+    
+            let currentMonth = new Date().getUTCMonth();
+            let currentYear = new Date().getUTCFullYear();
+    
             const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
+    
             function renderCalendar(events, month, year) {
-                const firstDayOfMonth = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
+                const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay();
+                const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    
                 calendar.innerHTML = '';
-
+    
                 // Add day headers
                 daysOfWeek.forEach(day => {
                     const dayHeader = document.createElement('div');
@@ -223,43 +223,43 @@
                     dayHeader.classList.add('calendar-day-header');
                     calendar.appendChild(dayHeader);
                 });
-
+    
                 // Fill in empty days before the first day of the month
                 for (let i = 0; i < firstDayOfMonth; i++) {
                     const emptyDiv = document.createElement('div');
                     emptyDiv.classList.add('calendar-day');
                     calendar.appendChild(emptyDiv);
                 }
-
+    
                 // Fill in the days of the month
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDiv = document.createElement('div');
                     dayDiv.textContent = day;
                     dayDiv.classList.add('calendar-day');
-
+    
                     const event = events.find(event => {
                         const eventDate = new Date(event.date);
-                        return eventDate.getDate() === day && eventDate.getMonth() === month && eventDate.getFullYear() === year;
+                        return eventDate.getUTCDate() === day && eventDate.getUTCMonth() === month && eventDate.getUTCFullYear() === year;
                     });
-
+    
                     if (event) {
                         dayDiv.classList.add('calendar-has-event');
                         const eventMarker = document.createElement('div');
                         eventMarker.textContent = event.title;
                         eventMarker.classList.add('calendar-event-marker');
                         dayDiv.appendChild(eventMarker);
-
+    
                         const eventDetails = document.createElement('div');
                         eventDetails.classList.add('calendar-event-details');
                         eventDetails.textContent = `${event.title} - ${new Date(event.date).toLocaleDateString()}`;
                     }
-
+    
                     calendar.appendChild(dayDiv);
                 }
-
+    
                 monthDisplay.textContent = `${monthNames[month]} ${year}`;
             }
-
+    
             function renderList(events) {
                 listView.innerHTML = events.map(event => `
                     <div class="calendar-event">
@@ -268,14 +268,14 @@
                     </div>
                 `).join('');
             }
-
+    
             fetch('events.json')
                 .then(response => response.json())
                 .then(data => {
                     renderCalendar(data, currentMonth, currentYear);
                     renderList(data);
                 });
-
+    
             prevMonthBtn.addEventListener('click', function() {
                 currentMonth--;
                 if (currentMonth < 0) {
@@ -288,7 +288,7 @@
                         renderCalendar(data, currentMonth, currentYear);
                     });
             });
-
+    
             nextMonthBtn.addEventListener('click', function() {
                 currentMonth++;
                 if (currentMonth > 11) {
@@ -301,7 +301,7 @@
                         renderCalendar(data, currentMonth, currentYear);
                     });
             });
-
+    
             calendarView.classList.add('active'); // Show calendar view by default
         });
     </script>
