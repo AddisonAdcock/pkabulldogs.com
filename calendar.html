@@ -8,28 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="events.css">
-</head>
-<body>
-
-    <header>
-        <div class="logo">
-            <a href="home.html"><img src="images/logo.png" alt="Phi Kappa Alpha Logo"></a>
-            <h1 class="club-name">Phi Kappa Alpha</h1>
-        </div>
-        <nav>
-            <a href="home.html" class="active">Home</a>
-            <a href="https://pkabulldogs.printful.me/">Merch</a>
-            <a href="events.html">Events</a>
-            <a href="calendar.html">Calendar</a>
-        </nav>
-        <div class="menu-icon">&#9776;</div>
-    </header>
-    <nav class="responsive-nav">
-        <a href="home.html">Home</a>
-        <a href="https://pkabulldogs.printful.me/">Merch</a>
-        <a href="events.html">Events</a>
-        <a href="calendar.html">Calendar</a>
-    </nav>
     <style>
         body {
             margin: 0;
@@ -37,6 +15,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            font-family: 'Libre Baskerville', serif;
         }
     
         .container {
@@ -45,6 +24,7 @@
             margin: 0 auto;
             padding: 20px;
             color: #fff;
+            box-sizing: border-box;
         }
     
         .calendar-header {
@@ -87,6 +67,8 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            box-sizing: border-box;
+            padding: 0 10px; /* Ensures even padding on both sides */
         }
     
         .calendar-grid {
@@ -103,7 +85,6 @@
             border: 1px solid #444;
             box-sizing: border-box;
             position: relative;
-            cursor: pointer;
         }
     
         .calendar-day-header {
@@ -112,23 +93,44 @@
             font-weight: bold;
         }
     
-        .calendar-event-marker {
+        .calendar-day-number {
+            position: relative;
+            z-index: 2;
+        }
+    
+        .calendar-event-dot {
             background-color: #8f0500;
+            width: 40px; /* Adjust size as needed */
+            height: 40px; /* Adjust size as needed */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; /* Ensure it's on top of other content */
+            cursor: pointer;
+        }
+    
+        .calendar-event-tooltip {
+            display: none;
+            position: absolute;
+            top: 100%; /* Position it below the day cell */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #8f0500; /* Red background for the tooltip */
             color: #fff;
             padding: 5px;
             border-radius: 5px;
-            margin-top: 5px;
-            font-size: 0.65rem;
-            line-height: 1rem;
-            display: inline-block;
-            width: 100%;
-            text-align: center;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 3; /* Ensure it's on top of other content */
         }
     
-        .calendar-has-event .calendar-event-marker {
-            font-size: calc(0.6rem + (0.5vw - 3px));
-            max-height: 100%;
-            overflow: hidden;
+        .calendar-day:hover .calendar-event-tooltip {
+            display: block;
         }
     
         .calendar-month-display {
@@ -149,8 +151,13 @@
                 font-size: 12px;
             }
     
-            .calendar-event-marker {
-                font-size: calc(0.5rem + (0.4vw - 2px));
+            .calendar-event-dot {
+                width: 30px;
+                height: 30px;
+            }
+    
+            .calendar-event-tooltip {
+                font-size: 0.65rem;
             }
         }
     
@@ -169,12 +176,39 @@
                 font-size: 10px;
             }
     
-            .calendar-event-marker {
-                font-size: calc(0.45rem + (0.35vw - 2px));
+            .calendar-event-dot {
+                width: 25px;
+                height: 25px;
+            }
+    
+            .calendar-event-tooltip {
+                font-size: 0.55rem;
             }
         }
-    </style>        
-    
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="home.html"><img src="images/logo.png" alt="Phi Kappa Alpha Logo"></a>
+            <h1 class="club-name">Phi Kappa Alpha</h1>
+        </div>
+        <nav>
+            <a href="home.html" class="active">Home</a>
+            <a href="https://pkabulldogs.printful.me/">Merch</a>
+            <a href="events.html">Events</a>
+            <a href="calendar.html">Calendar</a>
+        </nav>
+        <div class="menu-icon">&#9776;</div>
+    </header>
+    <nav class="responsive-nav">
+        <a href="home.html">Home</a>
+        <a href="https://pkabulldogs.printful.me/">Merch</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+    </nav>
+
     <div class="container">
         <div class="calendar-header">
             <div class="calendar-nav-buttons">
@@ -192,7 +226,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const prevMonthBtn = document.getElementById('prevMonthBtn');
@@ -232,8 +266,12 @@
                 // Fill in the days of the month
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDiv = document.createElement('div');
-                    dayDiv.textContent = day;
                     dayDiv.classList.add('calendar-day');
+    
+                    const dayNumber = document.createElement('div');
+                    dayNumber.classList.add('calendar-day-number');
+                    dayNumber.textContent = day;
+                    dayDiv.appendChild(dayNumber);
     
                     const event = events.find(event => {
                         const eventDate = new Date(event.date);
@@ -242,14 +280,13 @@
     
                     if (event) {
                         dayDiv.classList.add('calendar-has-event');
-                        const eventMarker = document.createElement('div');
-                        eventMarker.textContent = event.title;
-                        eventMarker.classList.add('calendar-event-marker');
-                        dayDiv.appendChild(eventMarker);
-    
-                        const eventDetails = document.createElement('div');
-                        eventDetails.classList.add('calendar-event-details');
-                        eventDetails.textContent = `${event.title} - ${new Date(event.date).toLocaleDateString()}`;
+                        const eventDot = document.createElement('div');
+                        eventDot.classList.add('calendar-event-dot');
+                        const eventTooltip = document.createElement('div');
+                        eventTooltip.classList.add('calendar-event-tooltip');
+                        eventTooltip.textContent = event.title;
+                        dayDiv.appendChild(eventDot);
+                        dayDiv.appendChild(eventTooltip);
                     }
     
                     calendar.appendChild(dayDiv);
@@ -258,56 +295,42 @@
                 monthDisplay.textContent = `${monthNames[month]} ${year}`;
             }
     
-            function renderList(events) {
-                listView.innerHTML = events.map(event => `
-                    <div class="calendar-event">
-                        <h3>${event.title}</h3>
-                        <p>${new Date(event.date).toLocaleDateString()}</p>
-                    </div>
-                `).join('');
-            }
-    
-            fetch('events.json')
-                .then(response => response.json())
-                .then(data => {
-                    renderCalendar(data, currentMonth, currentYear);
-                    renderList(data);
-                });
-    
-            prevMonthBtn.addEventListener('click', function() {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
-                }
+            function updateCalendar() {
                 fetch('events.json')
                     .then(response => response.json())
                     .then(data => {
                         renderCalendar(data, currentMonth, currentYear);
                     });
+            }
+    
+            prevMonthBtn.addEventListener('click', function() {
+                if (currentMonth === 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                } else {
+                    currentMonth--;
+                }
+                updateCalendar();
             });
     
             nextMonthBtn.addEventListener('click', function() {
-                currentMonth++;
-                if (currentMonth > 11) {
+                if (currentMonth === 11) {
                     currentMonth = 0;
                     currentYear++;
+                } else {
+                    currentMonth++;
                 }
-                fetch('events.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        renderCalendar(data, currentMonth, currentYear);
-                    });
+                updateCalendar();
             });
     
-            calendarView.classList.add('active'); // Show calendar view by default
+            updateCalendar();
         });
     </script>
+
     <footer>
         <a href="https://www.facebook.com/pkabulldogs?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://www.instagram.com/pkabulldogs/" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://www.youtube.com/@pkabulldogs" target="_blank"><i class="fab fa-youtube"></i></a>
     </footer>
-    <script src="script.js"></script>
 </body>
 </html>
