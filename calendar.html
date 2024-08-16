@@ -16,7 +16,8 @@
             flex-direction: column;
             min-height: 100vh;
             font-family: 'Libre Baskerville', serif;
-            background-color: whitesmoke;
+            background-color: #333;
+            color: #fff;
         }
 
         .container {
@@ -24,80 +25,144 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            color: #222;
             box-sizing: border-box;
         }
 
-        .events-header {
-            text-align: center;
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-bottom: 20px;
+            position: relative;
+            color: #fff;
         }
 
-        .events-header h1 {
-            font-size: 24px;
-            color: #8f0500;
+        .calendar-nav-buttons {
+            display: flex;
+            gap: 10px;
         }
 
-        .event-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .event-date {
-            font-size: 18px;
-            font-weight: bold;
-            color: #8f0500;
-        }
-
-        .event-title {
-            font-size: 20px;
-            color: #333;
-        }
-
-        .event-description {
+        .calendar-button {
+            background-color: #8f0500;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
             font-size: 16px;
-            color: #666;
+        }
+
+        .calendar-button:hover {
+            opacity: 0.8;
+        }
+
+        .calendar-view {
+            display: none;
+        }
+
+        .calendar-view.active {
+            display: block;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .calendar-day, .calendar-day-header {
+            padding: 20px;
+            background-color: #444;
+            text-align: center;
+            border: 1px solid #555;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .calendar-day-header {
+            background-color: #8f0500;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .calendar-day-number {
+            position: relative;
+            z-index: 2;
+        }
+
+        .calendar-event-dot {
+            background-color: #8f0500;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .calendar-event-tooltip {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #8f0500;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        .calendar-day:hover .calendar-event-tooltip,
+        .calendar-day.show-tooltip .calendar-event-tooltip {
+            display: block;
+        }
+
+        .calendar-month-display {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
-            .event-item {
+            .calendar-button {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+
+            .calendar-day, .calendar-day-header {
                 padding: 10px;
-            }
-
-            .event-date {
-                font-size: 16px;
-            }
-
-            .event-title {
-                font-size: 18px;
-            }
-
-            .event-description {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .event-item {
-                padding: 8px;
-            }
-
-            .event-date {
-                font-size: 14px;
-            }
-
-            .event-title {
-                font-size: 16px;
-            }
-
-            .event-description {
                 font-size: 12px;
             }
+
+            .calendar-event-dot {
+                width: 30px;
+                height: 30px;
+            }
+
+            .calendar-event-tooltip {
+                font-size: 0.65rem;
+            }
         }
+
     </style>
 </head>
 <body>
@@ -123,50 +188,147 @@
     </nav>
 
     <div class="container">
-        <div class="events-header">
-            <h1>Upcoming Events</h1>
+        <div class="calendar-header">
+            <div class="calendar-nav-buttons">
+                <button id="prevMonthBtn" class="calendar-button">Prev</button>
+                <div class="calendar-month-display" id="monthDisplay"></div>
+                <button id="nextMonthBtn" class="calendar-button">Next</button>
+            </div>
         </div>
-        <div id="eventsList">
-            <!-- Upcoming events will be dynamically loaded here -->
+        <div id="listView" class="calendar-view">
+            <!-- List of events will go here -->
+        </div>
+        <div id="calendarView" class="calendar-view active">
+            <div class="calendar-container">
+                <div id="calendar" class="calendar-grid"></div>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const eventsList = document.getElementById('eventsList');
-
-            function loadEvents() {
+            const prevMonthBtn = document.getElementById('prevMonthBtn');
+            const nextMonthBtn = document.getElementById('nextMonthBtn');
+            const listView = document.getElementById('listView');
+            const calendarView = document.getElementById('calendarView');
+            const calendar = document.getElementById('calendar');
+            const monthDisplay = document.getElementById('monthDisplay');
+    
+            let currentMonth = new Date().getUTCMonth();
+            let currentYear = new Date().getUTCFullYear();
+    
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+            function renderCalendar(events, month, year) {
+                const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay();
+                const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    
+                calendar.innerHTML = '';
+    
+                // Add day headers
+                daysOfWeek.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.textContent = day;
+                    dayHeader.classList.add('calendar-day-header');
+                    calendar.appendChild(dayHeader);
+                });
+    
+                // Fill in empty days before the first day of the month
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.classList.add('calendar-day');
+                    calendar.appendChild(emptyDiv);
+                }
+    
+                // Fill in the days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.classList.add('calendar-day');
+    
+                    const dayNumber = document.createElement('div');
+                    dayNumber.classList.add('calendar-day-number');
+                    dayNumber.textContent = day;
+                    dayDiv.appendChild(dayNumber);
+    
+                    const event = events.find(event => {
+                        const eventDate = new Date(event.date);
+                        return eventDate.getUTCDate() === day && eventDate.getUTCMonth() === month && eventDate.getUTCFullYear() === year;
+                    });
+    
+                    if (event) {
+                        dayDiv.classList.add('calendar-has-event');
+                        const eventDot = document.createElement('div');
+                        eventDot.classList.add('calendar-event-dot');
+                        const eventTooltip = document.createElement('div');
+                        eventTooltip.classList.add('calendar-event-tooltip');
+                        eventTooltip.textContent = event.title;
+                        dayDiv.appendChild(eventDot);
+                        dayDiv.appendChild(eventTooltip);
+                    }
+    
+                    calendar.appendChild(dayDiv);
+                }
+    
+                monthDisplay.textContent = `${monthNames[month]} ${year}`;
+            }
+    
+            function updateCalendar() {
                 fetch('events.json')
                     .then(response => response.json())
                     .then(data => {
-                        const now = new Date();
-                        eventsList.innerHTML = '';
-                        const upcomingEvents = data.filter(event => new Date(event.date) > now);
-                        upcomingEvents.forEach(event => {
-                            const eventItem = document.createElement('div');
-                            eventItem.classList.add('event-item');
-
-                            const eventDate = document.createElement('div');
-                            eventDate.classList.add('event-date');
-                            eventDate.textContent = new Date(event.date).toLocaleDateString();
-
-                            const eventTitle = document.createElement('div');
-                            eventTitle.classList.add('event-title');
-                            eventTitle.textContent = event.title;
-
-                            const eventDescription = document.createElement('div');
-                            eventDescription.classList.add('event-description');
-                            eventDescription.textContent = event.description;
-
-                            eventItem.appendChild(eventDate);
-                            eventItem.appendChild(eventTitle);
-                            eventItem.appendChild(eventDescription);
-                            eventsList.appendChild(eventItem);
-                        });
+                        renderCalendar(data, currentMonth, currentYear);
                     });
             }
-
-            loadEvents();
+    
+            prevMonthBtn.addEventListener('click', function() {
+                if (currentMonth === 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                } else {
+                    currentMonth--;
+                }
+                updateCalendar();
+            });
+    
+            nextMonthBtn.addEventListener('click', function() {
+                if (currentMonth === 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                } else {
+                    currentMonth++;
+                }
+                updateCalendar();
+            });
+    
+            // Add click and hover event listeners for mobile view
+            calendar.addEventListener('click', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.toggle('show-tooltip');
+                } else {
+                    // Hide all tooltips when clicking outside
+                    document.querySelectorAll('.calendar-day').forEach(dayDiv => {
+                        dayDiv.classList.remove('show-tooltip');
+                    });
+                }
+            });
+    
+            calendar.addEventListener('mouseover', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.add('show-tooltip');
+                }
+            });
+    
+            calendar.addEventListener('mouseout', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.remove('show-tooltip');
+                }
+            });
+    
+            updateCalendar();
         });
     </script>
 
@@ -175,6 +337,8 @@
         <a href="https://www.instagram.com/pkabulldogs/" target="_blank"><i class="fab fa-instagram"></i></a>
         <a href="https://www.youtube.com/@pkabulldogs" target="_blank"><i class="fab fa-youtube"></i></a>
     </footer>
+
     <script src="script.js"></script>
+
 </body>
 </html>
