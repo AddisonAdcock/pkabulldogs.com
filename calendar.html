@@ -129,7 +129,8 @@
             z-index: 3; /* Ensure it's on top of other content */
         }
     
-        .calendar-day:hover .calendar-event-tooltip {
+        .calendar-day:hover .calendar-event-tooltip,
+        .calendar-day.show-tooltip .calendar-event-tooltip {
             display: block;
         }
     
@@ -321,6 +322,33 @@
                     currentMonth++;
                 }
                 updateCalendar();
+            });
+    
+            // Add click and hover event listeners for mobile view
+            calendar.addEventListener('click', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.toggle('show-tooltip');
+                } else {
+                    // Hide all tooltips when clicking outside
+                    document.querySelectorAll('.calendar-day').forEach(dayDiv => {
+                        dayDiv.classList.remove('show-tooltip');
+                    });
+                }
+            });
+    
+            calendar.addEventListener('mouseover', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.add('show-tooltip');
+                }
+            });
+    
+            calendar.addEventListener('mouseout', function(event) {
+                if (event.target.classList.contains('calendar-event-dot')) {
+                    const dayDiv = event.target.parentElement;
+                    dayDiv.classList.remove('show-tooltip');
+                }
             });
     
             updateCalendar();
