@@ -226,7 +226,6 @@
     
                 calendar.innerHTML = '';
     
-                // Add day headers
                 daysOfWeek.forEach(day => {
                     const dayHeader = document.createElement('div');
                     dayHeader.textContent = day;
@@ -234,14 +233,12 @@
                     calendar.appendChild(dayHeader);
                 });
     
-                // Fill in empty days before the first day of the month
                 for (let i = 0; i < firstDayOfMonth; i++) {
                     const emptyDiv = document.createElement('div');
                     emptyDiv.classList.add('calendar-day');
                     calendar.appendChild(emptyDiv);
                 }
     
-                // Fill in the days of the month
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDiv = document.createElement('div');
                     dayDiv.classList.add('calendar-day');
@@ -301,13 +298,11 @@
                 updateCalendar();
             });
     
-            // Add click and hover event listeners for mobile view
             calendar.addEventListener('click', function(event) {
                 if (event.target.classList.contains('calendar-event-dot')) {
                     const dayDiv = event.target.parentElement;
                     dayDiv.classList.toggle('show-tooltip');
                 } else {
-                    // Hide all tooltips when clicking outside
                     document.querySelectorAll('.calendar-day').forEach(dayDiv => {
                         dayDiv.classList.remove('show-tooltip');
                     });
