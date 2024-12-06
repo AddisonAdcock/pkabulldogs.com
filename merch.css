@@ -1,0 +1,171 @@
+/* Body */
+body {
+    font-family: 'Libre Baskerville', serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    padding: 20px;
+    background-color: #8f0500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 80px; 
+    margin-right: 10px;
+}
+
+.club-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #fff;
+    color: #8f0500;
+    border-radius: 5px;
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+}
+
+.responsive-nav {
+    display: none;
+    background-color: #8f0500;
+    flex-direction: column;
+    z-index: 1000; 
+}
+
+.responsive-nav.active {
+    display: flex;
+}
+
+.responsive-nav a {
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        display: none; 
+    }
+
+    .menu-icon {
+        display: block; 
+    }
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Form Styling */
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+form h2 {
+    margin-bottom: 20px;
+    color: #8f0500;
+}
+
+form label {
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+}
+
+form input[type="text"], button {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+form .radio-group {
+    margin: 10px 0;
+    text-align: left;
+}
+
+form .radio-group input[type="radio"] {
+    margin-right: 10px;
+}
+
+form button {
+    background-color: #8f0500;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #a10a0a;
+}
+
+/* Footer */
+footer {
+    background-color: #8f0500;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 24px;
+}
