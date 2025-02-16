@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Your Shirt</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville&display=swap">
+    <link rel="stylesheet" href="merch.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="home.html"><img src="images/logo.png" alt="Phi Kappa Alpha Logo"></a>
+            <h1 class="club-name">Phi Kappa Alpha</h1>
+        </div>
+        <nav>
+            <a href="home.html" class="active">Home</a>
+            <a href="https://pkabulldogs.printful.me/">Merch</a>
+            <a href="events.html">Events</a>
+            <a href="calendar.html">Calendar</a>
+        </nav>
+    </header>
+    <main>
+        <form id="shirt-order-form">
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            <div class="radio-group">
+                <p>Shirt Size:</p>
+                <div>
+                    <input type="radio" id="size-s" name="size" value="S" required>
+                    <label for="size-s">Small</label>
+                </div>
+                <div>
+                    <input type="radio" id="size-m" name="size" value="M" required>
+                    <label for="size-m">Medium</label>
+                </div>
+                <div>
+                    <input type="radio" id="size-l" name="size" value="L" required>
+                    <label for="size-l">Large</label>
+                </div>
+                <div>
+                    <input type="radio" id="size-xl" name="size" value="XL" required>
+                    <label for="size-xl">Extra Large</label>
+                </div>
+            </div>
+            <button type="submit">Submit Order</button>
+        </form>
+    </main>
+    <footer>
+        <a href="https://www.facebook.com/pkabulldogs" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/pkabulldogs" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@pkabulldogs" target="_blank"><i class="fab fa-youtube"></i></a>
+    </footer>
+    <script>
+        const form = document.getElementById('shirt-order-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                size: document.querySelector('input[name="size"]:checked').value,
+            };
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbxwXwpYxJFd_cPA56HRi_kTJk-CG38D0jOzaNVHHeGt8lQe6MWSvOu2vqz7xyU2e_U8Kg/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                alert('Order submitted successfully!');
+                form.reset();
+            } catch (error) {
+                alert('Error submitting order: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
